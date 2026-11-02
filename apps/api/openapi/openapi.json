@@ -31052,6 +31052,11 @@
           "name": {
             "$ref": "#/components/schemas/LocalizedText"
           },
+          "propertyTypeId": {
+            "type": ["string", "null"],
+            "pattern": "^[a-f0-9]{24}$",
+            "description": "Property type; its parent category determines the listing category."
+          },
           "imageUrl": {
             "type": "null",
             "description": "Clear the previous cover URL."

@@ -2,18 +2,24 @@ import { expect, test } from '@playwright/test';
 import { getProviderPropertyStateCopy } from '../../src/features/provider_property/state-copy.ts';
 
 const providerId = 'a'.repeat(24), propertyId = 'b'.repeat(24), residentialId = '1'.repeat(24), commercialId = '2'.repeat(24), apartmentId = '3'.repeat(24), shopId = '4'.repeat(24);
-const property = { id: propertyId, kind: 'property', name: { ar: 'عقار منشور', en: 'Published property' }, slug: 'published-property', transactionType: 'sale', source: { providerId, sourceType: 'individual_broker' }, status: 'published', active: true, version: 2, propertyTypeId: apartmentId, area: { value: 100, unit: 'sqm' }, createdAt: '2026-08-18T08:00:00.000Z', updatedAt: '2026-08-18T09:00:00.000Z', availableActions: ['update'] };
+const property = { id: propertyId, kind: 'property', name: { ar: 'عقار منشور', en: 'Published property' }, slug: 'published-property', transactionType: 'sale', source: { providerId, sourceType: 'individual_broker' }, status: 'published', active: true, version: 2, propertyTypeId: apartmentId, area: { value: 100, unit: 'sqm' }, createdAt: '2026-08-18T08:00:00.000Z', updatedAt: '2026-08-18T09:00:00.000Z', availableActions: ['start_edit', 'request_deactivation'] };
 
 test('opens a published dashboard detail URL and selects its category by name', async ({ page }, info) => {
   const locale = info.project.name.endsWith('-en') ? 'en' : 'ar';
   let savedType: string | undefined;
+  let editing = false;
   await page.route('**/api/v1/**', async route => {
     const url = new URL(route.request().url());
     const reply = (data: unknown) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ data, meta: { requestId: 'category-detail-regression' } }) });
     if (url.pathname.endsWith('/auth/refresh')) return reply({ accessToken: 'provider.category.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: providerId, roleType: 'provider', status: 'verified' } });
     if (url.pathname.endsWith(`/provider/properties/${propertyId}`)) {
       expect(route.request().headers().authorization).toBe('Bearer provider.category.token');
-      return reply(property);
+      return reply(editing && url.searchParams.get('view') !== 'published' ? { ...property, version: 3, status: 'needs_changes', availableActions: ['update', 'submit'] } : property);
+    }
+    if (url.pathname.endsWith(`/provider/properties/${propertyId}/start-edit`)) {
+      expect(route.request().postDataJSON()).toMatchObject({ version: 2 });
+      editing = true;
+      return reply({ ...property, version: 3, status: 'needs_changes', availableActions: ['update', 'submit'] });
     }
     if (url.pathname.endsWith('/public/properties')) return reply({ items: [], categories: [
       { id: residentialId, slug: 'residential', name: { ar: 'سكني', en: 'Residential' }, propertyCount: 0, order: 0 },
@@ -24,8 +30,10 @@ test('opens a published dashboard detail URL and selects its category by name', 
     ], page: 1, limit: 1, total: 0 });
     if (url.pathname.endsWith(`/provider/properties/${propertyId}/steps/details`)) {
       expect(route.request().method()).toBe('PATCH');
+      expect(editing).toBe(true);
+      expect(route.request().postDataJSON()).toMatchObject({ version: 3 });
       savedType = (route.request().postDataJSON() as { propertyTypeId: string }).propertyTypeId;
-      return reply({ ...property, propertyTypeId: savedType, version: 3 });
+      return reply({ ...property, propertyTypeId: savedType, version: 4, status: 'needs_changes', availableActions: ['update', 'submit'] });
     }
     return route.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ error: { code: 'NOT_FOUND', messageKey: 'errors.notFound', details: [], requestId: 'irrelevant-navigation' } }) });
   });

@@ -90,14 +90,14 @@ export function createMongoosePublicPropertyComparisonRepository(connection: Con
     const propertyTypeIds = [...new Set(rows.flatMap((row) => { const value = id((row as Row).propertyTypeId); return value ? [value] : []; }))];
     const selectedFeatureIds = [...new Set(rows.flatMap(row => featureIds(row as Row)))];
     const [organizations, locations, propertyTypes, finishingOptions] = await Promise.all([
-      organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1 } }).toArray() : [],
+      organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, logoUrl: 1 } }).toArray() : [],
       locationIds.length ? connection.collection('locations').find({ _id: { $in: locationIds.map((value) => new Types.ObjectId(value)) }, active: true }, { projection: { _id: 1, name: 1 } }).toArray() : [],
       propertyTypeIds.length ? connection.collection('property_taxonomy').find({ _id: { $in: propertyTypeIds.map((value) => new Types.ObjectId(value)) }, kind: 'type', active: true }, { projection: { _id: 1, name: 1 } }).toArray() : [],
       selectedFeatureIds.length ? connection.collection('features_services').find({ _id: { $in: selectedFeatureIds.map(value => new Types.ObjectId(value)) }, kind: 'feature', active: true, $or: [{ groupKey: 'finishing' }, { slug: /(?:^|-)finish(?:ing)?(?:-|$)/u }] }, { projection: { _id: 1, name: 1 } }).sort({ order: 1, _id: 1 }).toArray() : []
     ]);
     const organizationById = new Map<string, { name: unknown; imageUrl?: string }>((await visiblePublicOrganizations(connection, organizations)).flatMap((row) => {
       const value = id((row as Row)._id);
-      return value && (row as Row).name !== undefined ? [[value, { name: (row as Row).name, ...(typeof (row as Row).imageUrl === 'string' ? { imageUrl: (row as Row).imageUrl as string } : {}) }] as const] : [];
+      return value && (row as Row).name !== undefined ? [[value, { name: (row as Row).name, ...(typeof (row as Row).logoUrl === 'string' && (row as Row).logoUrl ? { imageUrl: (row as Row).logoUrl as string } : {}) }] as const] : [];
     }));
     const locationById = new Map<string, unknown>(locations.flatMap((row) => {
       const value = id((row as Row)._id);

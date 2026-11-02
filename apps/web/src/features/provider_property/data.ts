@@ -329,11 +329,10 @@ export async function requestProviderPropertyDeactivation(input: PropertySubmit,
 }
 
 export async function startProviderPropertyEdit(input: PropertySubmit, options: ProviderPropertySubmitOptions): Promise<PropertyData> {
-  const headers = authorizationHeaders(options.authorization);
-  const response = await clientFor(options).request(`${propertyPath(options.propertyId)}/start-edit`, {
+  const response = await withPropertySession(options, () => clientFor(options).request(`${propertyPath(options.propertyId)}/start-edit`, {
     method: 'POST', json: propertySubmitSchema.parse(input), responseSchema: successEnvelopeSchema(propertyDataSchema),
-    ...(headers === undefined ? {} : { headers }),
+    headers: authorizationHeaders(options.authorization) ?? {},
     ...(options.signal === undefined ? {} : { signal: options.signal })
-  });
+  }));
   return response.data.data;
 }

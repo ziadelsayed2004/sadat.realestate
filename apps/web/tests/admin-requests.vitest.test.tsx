@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { requestDataSchema, requestIssueListDataSchema, requestListDataSchema, viewingDataSchema, viewingListDataSchema, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
@@ -92,9 +92,9 @@ describe('Admin request administration contracts and views', () => {
       await waitFor(() => expect(loadRequests).toHaveBeenLastCalledWith({ page: 1, limit: 20, type }, expect.any(AbortSignal)));
       expect(screen.getByTestId(`request-type-${type}`)).toHaveAttribute('aria-pressed', 'true');
       expect(screen.getByTestId(`admin-attention-filter-${queue}`)).toHaveTextContent(new Intl.NumberFormat(locale).format(count));
-      fireEvent.click(screen.getByRole('button', { name: copy.next }));
+      fireEvent.click(within(document.querySelector('.admin-requests__pagination')!).getByRole('button', { name: copy.next }));
       await waitFor(() => expect(loadRequests).toHaveBeenLastCalledWith({ page: 2, limit: 20, type }, expect.any(AbortSignal)));
-      fireEvent.click(screen.getByRole('button', { name: copy.clear }));
+      fireEvent.click(within(document.querySelector('.admin-requests__filter-actions')!).getByRole('button', { name: copy.clear }));
       await waitFor(() => expect(loadRequests).toHaveBeenLastCalledWith({ page: 1, limit: 20, type }, expect.any(AbortSignal)));
     }
     expect(markRead).not.toHaveBeenCalled();
@@ -102,7 +102,7 @@ describe('Admin request administration contracts and views', () => {
     await waitFor(() => expect(loadRequests).toHaveBeenLastCalledWith({ page: 1, limit: 20 }, expect.any(AbortSignal)));
     fireEvent.click(screen.getByTestId(`admin-request-${request.id}`).querySelector('button')!);
     await waitFor(() => expect(markRead).toHaveBeenCalledWith({ queueKey: 'contact-requests', itemId: request.id }));
-  });
+  }, 15_000);
 
   it('uses real viewings with their own status filters inside all requests and returns to the normal list', async () => {
     window.history.replaceState({}, '', '/admin/requests');

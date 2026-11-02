@@ -9,6 +9,7 @@ import { AdminPropertyPhoto } from './photo.tsx';
 import AdminPropertyVideo from './video.tsx';
 import { AdminPaymentPlans } from './payment-plans.tsx';
 import { createSessionClient } from '../contracts/session-client.ts';
+import { AdminPropertyTaxonomyFields } from './taxonomy-fields.tsx';
 
 const mediaList = successEnvelopeSchema(z.object({ items: z.array(propertyMediaDataSchema) }));
 export function AdminPropertyEditor({ initialProperty, locale, authorization, apiOrigin, onSaved }: { readonly initialProperty: PropertyData; readonly locale: SupportedLocale; readonly authorization?: AdminPropertiesAuthorizationSource | undefined; readonly apiOrigin?: string | undefined; readonly onSaved: (property: PropertyData) => void }) {
@@ -24,6 +25,8 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
   const [clearPlans, setClearPlans] = useState(false);
   const [transactionType, setTransactionType] = useState(property.transactionType);
   const [deliveryStatus, setDeliveryStatus] = useState(property.deliveryStatus);
+  const [propertyTypeId, setPropertyTypeId] = useState(property.propertyTypeId ?? '');
+  const [taxonomyIncomplete, setTaxonomyIncomplete] = useState(false);
   const [area, setArea] = useState(String(property.area?.value ?? ''));
   const [layout, setLayout] = useState({ bedrooms: String(property.layout?.bedrooms ?? ''), bathrooms: String(property.layout?.bathrooms ?? ''), floor: String(property.layout?.floor ?? ''), totalFloors: String(property.layout?.totalFloors ?? '') });
   const [reason, setReason] = useState('');
@@ -56,6 +59,7 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
     setArea(current => current === String(old.area?.value ?? '') ? String(next.area?.value ?? '') : current);
     setTransactionType(current => current === old.transactionType ? next.transactionType : current);
     setDeliveryStatus(current => current === old.deliveryStatus ? next.deliveryStatus : current);
+    setPropertyTypeId(current => current === (old.propertyTypeId ?? '') ? next.propertyTypeId ?? '' : current);
     setLayout(current => Object.fromEntries(Object.entries(current).map(([key, value]) => [key, value === String(old.layout?.[key as keyof typeof old.layout] ?? '') ? String(next.layout?.[key as keyof typeof next.layout] ?? '') : value])) as typeof current);
     setPlans(current => JSON.stringify(current) === JSON.stringify(old.paymentPlans ?? []) ? next.paymentPlans ?? [] : current);
     setInstallments(current => current === Boolean(old.paymentPlans?.length) ? Boolean(next.paymentPlans?.length) : current);
@@ -101,6 +105,7 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
     return result.data.data;
   }
   async function saveAll(): Promise<string | void> {
+    if (taxonomyIncomplete) { setFailed(true); return ar ? 'اختر نوع العقار التابع للتصنيف الجديد قبل الحفظ.' : 'Choose a property type in the new category before saving.'; }
     const equal = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
     const basic: Record<string, unknown> = {};
     const details: Record<string, unknown> = {};
@@ -111,6 +116,7 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
     const oldDescription = property.description ? localize({ ar: property.description.ar ?? '', en: property.description.en ?? '' }) : null;
     if (!equal(nextDescription, oldDescription)) details.description = nextDescription;
     if (deliveryStatus !== property.deliveryStatus) details.deliveryStatus = deliveryStatus || null;
+    if (propertyTypeId !== (property.propertyTypeId ?? '')) details.propertyTypeId = propertyTypeId || null;
     if (area.trim() !== String(property.area?.value ?? '')) details.area = area.trim() ? { value: Number(area), unit: 'sqm' } : null;
     const nextLayout = Object.fromEntries(Object.entries(layout).filter(([, value]) => value.trim()).map(([key, value]) => [key, Number(value)]));
     const oldLayout = Object.fromEntries(Object.keys(layout).filter(key => property.layout?.[key as keyof typeof property.layout] !== undefined).map(key => [key, property.layout?.[key as keyof typeof property.layout]]));
@@ -164,6 +170,7 @@ export function AdminPropertyEditor({ initialProperty, locale, authorization, ap
     <div className="admin-property-editor__grid">{(['ar', 'en'] as const).map(language => <label key={language}>{ar ? 'عنوان العقار' : 'Property title'} {language.toUpperCase()}<input value={name[language]} onChange={event => setName(current => ({ ...current, [language]: event.target.value }))} /></label>)}</div>
     <div className="admin-property-editor__grid">{(['ar', 'en'] as const).map(language => <label key={language}>{ar ? 'وصف العقار' : 'Property description'} {language.toUpperCase()}<textarea value={description[language]} onChange={event => setDescription(current => ({ ...current, [language]: event.target.value }))} /></label>)}</div>
     <label>{ar ? 'السعر' : 'Price'}<input type="number" min="1" value={amount} onChange={event => setAmount(event.target.value)} /></label>
+    <AdminPropertyTaxonomyFields value={propertyTypeId} locale={locale} apiOrigin={apiOrigin} onChange={setPropertyTypeId} onIncompleteChange={setTaxonomyIncomplete} />
     <label>{ar ? 'نوع العرض' : 'Listing type'}<select value={transactionType} onChange={event => setTransactionType(event.target.value as typeof transactionType)}><option value="sale">{ar ? 'للبيع' : 'For sale'}</option><option value="rent">{ar ? 'للإيجار' : 'For rent'}</option></select></label>
     <label htmlFor="admin-property-delivery-status">{ar ? 'حالة التسليم' : 'Delivery status'}<select id="admin-property-delivery-status" value={deliveryStatus ?? ''} onChange={event => setDeliveryStatus(event.target.value as typeof deliveryStatus)}><option value="">{ar ? 'غير محدد' : 'Not specified'}</option>{Object.entries({ ready_to_move: ar ? 'جاهز للتسليم' : 'Ready to move', future_delivery: ar ? 'تسليم مستقبلي' : 'Future delivery', under_construction: ar ? 'تحت الإنشاء' : 'Under construction', partial_infrastructure: ar ? 'تأسيس جزئي' : 'Partial infrastructure' }).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
     <AdminPaymentPlans locale={locale} enabled={installments} onEnabled={value => { setInstallments(value); setClearPlans(!value); }} plans={plans} onChange={setPlans} currency={property.price?.currency ?? 'EGP'} />

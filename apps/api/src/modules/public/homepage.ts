@@ -217,6 +217,7 @@ type MongoRow = {
   featuredAt?: Date;
   updatedAt?: Date;
   imageUrl?: string;
+  logoUrl?: string;
   targetUrl?: string;
   propertyTypeId?: unknown;
   categoryId?: unknown;
@@ -251,7 +252,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
         findRows(connection, 'property_taxonomy', { kind: { $in: ['category', 'type'] }, active: true }, { _id: 1, kind: 1, categoryId: 1, slug: 1, name: 1, imageUrl: 1, order: 1, active: 1 }, { order: 1, slug: 1, _id: 1 }, 100),
         findRows(connection, 'cms_homepage_metrics', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, value: 1, unit: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'locations', { active: true }, { _id: 1, kind: 1, name: 1, slug: 1, parentLocationId: 1, order: 1, active: 1 }, { order: 1, kind: 1, slug: 1, _id: 1 }, 500),
-        findRows(connection, 'organizations', { status: 'approved' }, { _id: 1, providerId: 1, name: 1, imageUrl: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
+        findRows(connection, 'organizations', { status: 'approved' }, { _id: 1, providerId: 1, name: 1, logoUrl: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
         connection.collection('properties').countDocuments({ status: 'published', active: true, ...unexpiredPropertyFilter() }),
         findRows(connection, 'cms_population_values', {}, { _id: 0, status: 1, value: 1, sourceLabel: 1, sourceUrl: 1, asOf: 1 }, { updatedAt: -1, _id: 1 }, 1),
         findRows(connection, 'cms_display_settings', { key: { $in: CITY_STATISTICS.map(item => `city_metric_${item.key}`) }, status: 'published' }, { _id: 0, key: 1, value: 1, status: 1 }, { key: 1 }, 4)
@@ -292,7 +293,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
       }
       const mapId = (row: MongoRow) => id(row._id);
       const locationNames = new Map(locations.flatMap((row) => { const value = mapId(row); return value && row.name !== undefined ? [[value, row.name] as const] : []; }));
-      const organizationById = new Map((await visiblePublicOrganizations(connection, organizations)).flatMap((row) => { const value = mapId(row); return value && row.name !== undefined && typeof row.kind === 'string' ? [[value, { name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), kind: row.kind }] as const] : []; }));
+      const organizationById = new Map((await visiblePublicOrganizations(connection, organizations)).flatMap((row) => { const value = mapId(row); return value && row.name !== undefined && typeof row.kind === 'string' ? [[value, { name: row.name, ...(typeof row.logoUrl === 'string' && row.logoUrl ? { imageUrl: row.logoUrl } : {}), kind: row.kind }] as const] : []; }));
       return {
         totalPropertyCount,
         manualMetrics: manualCityMetrics(cityStatistics),

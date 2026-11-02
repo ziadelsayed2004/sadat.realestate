@@ -945,18 +945,25 @@
 }
 
 .public-homepage__source-logo {
-  flex: 0 0 2.25rem;
-  inline-size: 2.25rem;
-  block-size: 2.25rem;
+  flex: 0 0 3.25rem;
+  inline-size: 3.25rem;
+  block-size: 3.25rem;
   overflow: hidden;
   border: 1px solid rgb(23 35 63 / 0.12);
   border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: var(--color-brand-primary);
 }
 
 .public-homepage__source-logo>img {
   inline-size: 100%;
   block-size: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #fff;
+  padding: 15%;
+  box-sizing: border-box;
 }
 
 .public-homepage__source-copy {

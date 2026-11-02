@@ -62,6 +62,9 @@ describe('Provider property advanced wizard steps', () => {
     const category = await screen.findByRole('combobox', { name: 'Property category' });
     await waitFor(() => expect(category).toHaveValue(residential));
     fireEvent.change(category, { target: { value: commercial } });
+    fireEvent.click(screen.getByRole('button', { name: getProviderPropertyCopy('en').wizard.saveDraft }));
+    expect(screen.getByRole('alert')).toHaveTextContent('Choose a property type in the new category before saving.');
+    expect(save).not.toHaveBeenCalled();
     expect(screen.queryByRole('option', { name: 'Apartment' })).toBeNull();
     const type = screen.getByRole('combobox', { name: getProviderPropertyAdvancedCopy('en').labels.propertyTypeId });
     expect(type).toHaveValue('');

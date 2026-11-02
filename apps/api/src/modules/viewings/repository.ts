@@ -106,7 +106,7 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
     }));
     const [locationRows, organizationRows] = await Promise.all([
       locationIds.length === 0 ? [] : connection.collection('locations').find({ _id: { $in: publicRelatedObjectIds(locationIds) }, active: true }, { projection: { _id: 1, name: 1 } }).toArray(),
-      organizationIds.length === 0 ? [] : connection.collection('organizations').find({ _id: { $in: publicRelatedObjectIds(organizationIds) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1 } }).toArray()
+      organizationIds.length === 0 ? [] : connection.collection('organizations').find({ _id: { $in: publicRelatedObjectIds(organizationIds) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, logoUrl: 1 } }).toArray()
     ]);
     const locations = new Map(locationRows.flatMap(row => {
       const value = publicRelatedId(row._id);
@@ -114,7 +114,7 @@ export function createMongooseViewingRepository(connection: Connection, audit?: 
     }));
     const organizations = new Map((await visiblePublicOrganizations(connection, organizationRows)).flatMap(row => {
       const value = publicRelatedId(row._id);
-      return value && row.name !== undefined ? [[value, { name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}) } satisfies PublicRelatedOrganization] as const] : [];
+      return value && row.name !== undefined ? [[value, { name: row.name, ...(typeof row.logoUrl === 'string' && row.logoUrl ? { imageUrl: row.logoUrl } : {}) } satisfies PublicRelatedOrganization] as const] : [];
     }));
     const cards = new Map(propertyRows.flatMap(row => {
       const locationId = publicRelatedId(row.locationId);

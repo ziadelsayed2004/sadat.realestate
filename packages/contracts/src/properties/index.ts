@@ -218,6 +218,7 @@ export const propertyPricingStepSchema = draftPatch(pricingFields).superRefine(v
 // Publication, ownership, and moderation remain separate guarded operations.
 export const propertyAdminEditSchema = draftPatch({
   name: localizedTextSchema.optional(),
+  propertyTypeId: propertyObjectIdSchema.nullable().optional(),
   description: propertyDescriptionSchema.nullable().optional(),
   area: propertyAreaSchema.nullable().optional(),
   layout: propertyLayoutSchema.optional(),

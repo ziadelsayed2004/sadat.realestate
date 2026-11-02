@@ -41,6 +41,21 @@ const admin = '4123456789abcdef01234567';
 const now = new Date('2026-08-14T08:00:00.000Z');
 const claims = (sub = provider, status: 'verified' | 'pending_review' = 'verified') => ({ sub, role: 'provider', status, iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '4123456789abcdef01234567', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims);
 
+test('administrators and the property owner can change its type with current versions and ownership checks', async () => {
+  const { service, rows } = fixture(true);
+  const oldType = '5'.repeat(24), newType = '6'.repeat(24);
+  const context = { requestId: 'property-type-edit', traceId: 'a'.repeat(32) };
+  rows.set(id, record({ status: 'published', propertyTypeId: oldType }));
+  const updated = await service.adminEdit(admin, id, { version: 0, propertyTypeId: newType, reason: 'Correct property category and type' }, context);
+  assert.equal(updated.propertyTypeId, newType);
+  assert.equal(updated.status, 'published');
+  await assert.rejects(service.adminEdit(admin, id, { version: 0, propertyTypeId: oldType, reason: 'Stale category edit' }, context), /PROPERTY_VERSION_CONFLICT/);
+  const editing = await service.startEdit(claims(), id, { version: updated.version, reason: 'Owner corrects property category' }, context);
+  await assert.rejects(service.saveStep(claims(other), id, 'details', { version: editing.version, propertyTypeId: oldType, reason: 'Foreign category edit' }, context), /PROPERTY_NOT_FOUND/);
+  const saved = await service.saveStep(claims(), id, 'details', { version: editing.version, propertyTypeId: oldType, reason: 'Owner corrects property type' }, context);
+  assert.equal(saved.propertyTypeId, oldType);
+});
+
 test('reconsiders rejected and returned properties while keeping permissions, readiness and versions enforced', async () => {
   const context = { requestId: 'reconsider-property', traceId: 'a'.repeat(32) };
   for (const status of ['rejected', 'needs_changes'] as const) {

@@ -155,7 +155,7 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
         connection.collection('provider_applications').find({ userId: account }, { projection: { _id: 1 } }).toArray()
       ]);
       const ownerIds = [account, ...profiles.map(value => value._id), ...applications.map(value => value._id)];
-      organization = await organizations.findOne({ providerId: { $in: [...ownerIds, ...ownerIds.map(value => value.toString())] }, kind: policy.providerType, status: 'approved' }, { projection: { _id: 1, slug: 1, name: 1, imageUrl: 1, contactPhone: 1 } });
+      organization = await organizations.findOne({ providerId: { $in: [...ownerIds, ...ownerIds.map(value => value.toString())] }, kind: policy.providerType, status: 'approved' }, { projection: { _id: 1, slug: 1, name: 1, logoUrl: 1, contactPhone: 1 } });
     }
     delete base.organizationId;
     delete base.providerId;
@@ -164,7 +164,7 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
       if (organizationId) base.organizationId = organizationId;
       const slug = organizationSlugSchema.safeParse(organization.slug);
       if (slug.success && policy && (policy.providerType === 'brokerage_office' || directoryIdentityVisible(policy))) base.organizationSlug = slug.data;
-      base.sourceName = organization.name; if (typeof organization.imageUrl === 'string') base.sourceImageUrl = organization.imageUrl;
+      base.sourceName = organization.name; if (typeof organization.logoUrl === 'string' && organization.logoUrl) base.sourceImageUrl = organization.logoUrl;
       base.sourceVerified = policy?.approved === true;
     }
     if (policy?.contact && typeof organization?.contactPhone === 'string') { base.contact = { phone: organization.contactPhone }; base.contactVisible = true; }
@@ -182,10 +182,10 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
     const relatedOrganizationIds = [...new Set(relatedRows.flatMap((value) => { const valueId = id(value.organizationId); return valueId ? [valueId] : []; }))];
     const [relatedLocationRows, relatedOrganizationRows] = await Promise.all([
       relatedLocationIds.length ? connection.collection('locations').find({ _id: { $in: relatedLocationIds.map((value) => new Types.ObjectId(value)) }, active: true }, { projection: { _id: 1, name: 1 } }).toArray() : [],
-      relatedOrganizationIds.length ? connection.collection('organizations').find({ _id: { $in: relatedOrganizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, imageUrl: 1, status: 1 } }).toArray() : []
+      relatedOrganizationIds.length ? connection.collection('organizations').find({ _id: { $in: relatedOrganizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, providerId: 1, name: 1, logoUrl: 1, status: 1 } }).toArray() : []
     ]);
     const relatedLocations = new Map<string, unknown>(relatedLocationRows.flatMap((value) => { const valueId = id(value._id); return valueId && value.name !== undefined ? [[valueId, value.name] as const] : []; }));
-    const relatedOrganizations = new Map<string, { name: unknown; imageUrl?: string }>((await visiblePublicOrganizations(connection, relatedOrganizationRows)).flatMap((value) => { const valueId = id(value._id); return valueId && value.name !== undefined ? [[valueId, { name: value.name, ...(typeof value.imageUrl === 'string' ? { imageUrl: value.imageUrl } : {}) }] as const] : []; }));
+    const relatedOrganizations = new Map<string, { name: unknown; imageUrl?: string }>((await visiblePublicOrganizations(connection, relatedOrganizationRows)).flatMap((value) => { const valueId = id(value._id); return valueId && value.name !== undefined ? [[valueId, { name: value.name, ...(typeof value.logoUrl === 'string' && value.logoUrl ? { imageUrl: value.logoUrl } : {}) }] as const] : []; }));
     const mappedProject = project ? { id: id(project._id) ?? '', slug: String(project.slug ?? ''), name: project.name, ...(project.description !== undefined ? { description: project.description } : {}), status: String(project.status ?? '') } : null;
     const mappedMedia = media.flatMap((value) => { const mediaId = id(value._id); const propertyId = id(value.propertyId); return mediaId && propertyId && typeof value.kind === 'string' && typeof value.originalFilename === 'string' && typeof value.detectedMime === 'string' && typeof value.byteSize === 'number' && typeof value.sortOrder === 'number' && typeof value.isCover === 'boolean' && typeof value.processingState === 'string' && typeof value.active === 'boolean' ? [{ id: mediaId, propertyId, kind: value.kind, ...(typeof value.imageUrl === 'string' ? { imageUrl: value.imageUrl } : {}), originalFilename: value.originalFilename, detectedMime: value.detectedMime, byteSize: value.byteSize, sortOrder: value.sortOrder, isCover: value.isCover, processingState: value.processingState, active: value.active }] : []; });
     const relatedProperties = relatedRows.flatMap((value) => {

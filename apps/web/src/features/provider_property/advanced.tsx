@@ -14,7 +14,7 @@ import type { RouteSession } from '../routing/index.ts';
 import { ProviderNavigation } from '../provider/index.ts';
 import { loadProviderCommission } from '../provider/advertising-data.ts';
 import type { ProviderPropertyAuthClient, ProviderPropertyLoadAction, ProviderPropertySaveAction } from './wizard.tsx';
-import { loadProviderProperty, loadProviderPropertyTypes, loadProviderPropertyAmenities, saveProviderPropertyStep, type ProviderPropertyStep, type ProviderPropertyTypeOption } from './data.ts';
+import { loadProviderProperty, loadProviderPropertyTypes, loadProviderPropertyAmenities, saveProviderPropertyStep, startProviderPropertyEdit, type ProviderPropertyStep, type ProviderPropertyTypeOption } from './data.ts';
 import { getProviderPropertyCopy, type ProviderPropertyCopy, type ProviderPropertyWizardState } from './copy.ts';
 import { getProviderPropertyAdvancedCopy, type ProviderPropertyAdvancedCopy, type ProviderPropertyAdvancedStep } from './steps-copy.ts';
 import { getProviderPropertyRailLabels, PROVIDER_PROPERTY_RAIL_STEPS } from './steps.ts';
@@ -223,9 +223,13 @@ function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
   const savedCategoryId = propertyTypes.find(type => type.id === form.propertyTypeId)?.categoryId;
   const selectedCategoryId = savedCategoryId ?? categoryId;
   const visibleTypes = selectedCategoryId ? propertyTypes.filter(type => type.categoryId === selectedCategoryId) : propertyTypes;
+  const [categoryError, setCategoryError] = useState(false);
   const updateDescription = (value: string) => setForm({ ...form, description: { ...form.description, [locale]: value } });
   return (
-    <form className="provider-property-wizard__form" data-form-step="details" onSubmit={event => onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue')} noValidate>
+    <form className="provider-property-wizard__form" data-form-step="details" onSubmit={event => {
+      if (selectedCategoryId && !form.propertyTypeId) { event.preventDefault(); setCategoryError(true); return; }
+      setCategoryError(false); onSubmit(event, (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value') === 'continue');
+    }} noValidate>
       <div className="provider-property-wizard__intro"><p className="provider-dashboard__eyebrow">{copy.wizard.eyebrow}</p><h1 id="provider-property-wizard-title">{copy.wizard.createTitle}</h1><p>{copy.wizard.createDescription}</p></div>
       <WizardSteps step="details" locale={locale} copy={copy} />
       <section className="provider-property-wizard__card" aria-labelledby="provider-property-details-title">
@@ -257,6 +261,7 @@ function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
         </div>
         {propertyTypesState === 'success' && propertyTypes.length === 0 ? <div className="provider-property-wizard__location-placeholder" role="status"><strong>{advancedCopy.propertyTypeCatalogEmptyTitle}</strong><p>{advancedCopy.propertyTypeCatalogEmptyBody}</p></div> : null}
         {propertyTypesState === 'error' ? <div className="provider-property-wizard__location-placeholder" role="status"><strong>{advancedCopy.propertyTypeCatalogUnavailableTitle}</strong><p>{advancedCopy.propertyTypeCatalogUnavailableBody}</p></div> : null}
+        {categoryError && !form.propertyTypeId ? <p role="alert">{locale === 'ar' ? 'اختر نوع العقار التابع للتصنيف الجديد قبل الحفظ.' : 'Choose a property type in the new category before saving.'}</p> : null}
       </section>
       <ReasonAndMessage copy={copy} formReason={form.reason} onReasonChange={reason => setForm({ ...form, reason })} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} validationBody={validationMessage} />
       <WizardActions copy={copy} saving={saving} showBack={false} />
@@ -531,7 +536,13 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
     }
     setMutationState('saving');
     try {
-      const next = await saveAction(propertyId, step, parsed.data);
+      let version = property.version;
+      if (property.status === 'published' && property.availableActions.includes('start_edit')) {
+        const working = await startProviderPropertyEdit({ version, reason: parsed.data.reason }, { propertyId, apiOrigin, authorization: authClient });
+        setProperty(working);
+        version = working.version;
+      }
+      const next = await saveAction(propertyId, step, { ...parsed.data, version });
       setProperty(next);
       setForm(formForStep(step, next, copy));
       setMutationState('success');

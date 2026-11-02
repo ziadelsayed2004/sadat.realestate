@@ -12,6 +12,36 @@ const response = (data: unknown) => new Response(JSON.stringify({ data, meta: { 
 const plan = { name: { ar: 'خطة سنوية', en: 'Annual plan' }, installments: 12, frequency: 'monthly' as const, downPayment: { amount: 100000, currency: 'EGP' }, installmentAmount: { amount: 75000, currency: 'EGP' } };
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
+it.each(['ar', 'en'] as const)('changes a published property category and type atomically from the admin editor in %s', async locale => {
+  const residential = '1'.repeat(24), commercial = '2'.repeat(24), apartment = '3'.repeat(24), shop = '4'.repeat(24);
+  const initial = { ...property, propertyTypeId: apartment };
+  const bodies: Record<string, unknown>[] = [];
+  vi.stubGlobal('fetch', vi.fn<typeof fetch>(async (input, init) => {
+    if (String(input).includes('/public/properties')) return response({ items: [], categories: [
+      { id: residential, slug: 'residential', name: { ar: 'سكني', en: 'Residential' }, propertyCount: 0, order: 0 },
+      { id: commercial, slug: 'commercial', name: { ar: 'تجاري', en: 'Commercial' }, propertyCount: 0, order: 1 }
+    ], propertyTypes: [
+      { id: apartment, categoryId: residential, slug: 'apartment', name: { ar: 'شقة', en: 'Apartment' }, propertyCount: 0, order: 0 },
+      { id: shop, categoryId: commercial, slug: 'shop', name: { ar: 'محل', en: 'Shop' }, propertyCount: 0, order: 1 }
+    ], page: 1, limit: 1, total: 0 });
+    if (init?.method !== 'PATCH') return response({ items: [] });
+    const body = JSON.parse(String(init.body)); bodies.push(body);
+    return response({ ...initial, ...body, reason: undefined, version: 4 });
+  }));
+  renderWithLocale(<AdminPropertyEditor initialProperty={initial} locale={locale} authorization={authorization} onSaved={() => undefined} />, { locale });
+  const category = screen.getByLabelText(locale === 'ar' ? 'تصنيف العقار' : 'Property category');
+  await waitFor(() => expect(category).toHaveValue(residential));
+  fireEvent.change(category, { target: { value: commercial } });
+  fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'حفظ التعديلات' : 'Save changes' }));
+  expect(await screen.findByRole('alert')).toHaveTextContent(locale === 'ar' ? 'اختر نوع العقار' : 'Choose a property type');
+  expect(bodies).toHaveLength(0);
+  const type = screen.getByLabelText(locale === 'ar' ? 'نوع العقار' : 'Property type');
+  expect(within(type).queryByRole('option', { name: locale === 'ar' ? 'شقة' : 'Apartment' })).toBeNull();
+  fireEvent.change(type, { target: { value: shop } });
+  fireEvent.click(screen.getByRole('button', { name: locale === 'ar' ? 'حفظ التعديلات' : 'Save changes' }));
+  await waitFor(() => expect(bodies).toEqual([{ version: 3, reason: 'Administrative property edit', propertyTypeId: shop }]));
+});
+
 it('recovers a real version conflict without losing local edits or overwriting untouched server fields', async () => {
   const latest = { ...property, name: { en: 'Published villa', ar: 'عنوان أحدث من السيرفر' }, price: { amount: 2500000, currency: 'EGP' }, version: 4 };
   const bodies: Record<string, unknown>[] = [];

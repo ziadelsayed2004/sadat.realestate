@@ -210,7 +210,7 @@
   block-size: 2rem;
   flex: 0 0 2rem;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
   background: var(--color-surface-soft);
 }
 
