@@ -2,11 +2,13 @@ import { expect, test } from '@playwright/test';
 import { publicHomepageFixture, publicPropertyListFixture, routePublicHomepageApi } from './public-fixtures.ts';
 import { adminPropertyFixture, adminPropertyId, routeAdminPropertyApis } from './admin-properties.fixtures.ts';
 
-test('company logos stay complete and readable in homepage and search property cards', async ({ page }, info) => {
+for (const square of [false, true]) test(`company logos stay circular and readable with ${square ? 'square' : 'wide'} artwork`, async ({ page }, info) => {
   const lang = info.project.name.endsWith('-en') ? 'en' : 'ar';
   await routePublicHomepageApi(page);
   const logo = `/api/v1/public/organization-photos/${'8'.repeat(24)}`;
-  await page.route(`**${logo}`, route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="80" viewBox="0 0 300 80"><rect width="300" height="80" fill="white"/><path fill="#145649" d="M0 0h30v80H0zM270 0h30v80h-30z"/><text x="150" y="57" text-anchor="middle" font-size="56" fill="#145649">LOGO</text></svg>' }));
+  await page.route(`**${logo}`, route => route.fulfill({ contentType: 'image/svg+xml', body: square
+    ? '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="300" height="300" fill="#f1e6c9"/><text x="150" y="170" text-anchor="middle" font-size="56" fill="#145649">LOGO</text></svg>'
+    : '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="80" viewBox="0 0 300 80"><rect width="300" height="80" fill="white"/><path fill="#145649" d="M0 0h30v80H0zM270 0h30v80h-30z"/><text x="150" y="57" text-anchor="middle" font-size="56" fill="#145649">LOGO</text></svg>' }));
   const home = publicHomepageFixture();
   home.data.properties = home.data.properties.map(item => ({ ...item, sourceImageUrl: logo, sourceName: { ar: 'اسم الشركة', en: 'Company identity' } }));
   const listing = publicPropertyListFixture();
@@ -22,6 +24,8 @@ test('company logos stay complete and readable in homepage and search property c
     await image.scrollIntoViewIfNeeded();
     await expect(image).toHaveAttribute('src', logo);
     await expect(image).toHaveCSS('object-fit', 'contain');
+    await expect(image).toHaveCSS('padding', '0px');
+    await expect(image).toHaveCSS('border-radius', '50%');
     await expect.poll(() => image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBe(300);
     expect((await image.boundingBox())!.width).toBeGreaterThanOrEqual(minimum - 2);
     await image.locator('..').screenshot({ path: info.outputPath(`company-logo-${minimum}.png`) });
