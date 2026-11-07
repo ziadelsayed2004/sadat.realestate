@@ -1,0 +1,30 @@
+import { expect, test } from '@playwright/test';
+import { fileURLToPath } from 'node:url';
+import { routeAdminHomeApis } from './admin-home.fixtures.ts';
+import { adminAdsRequestFixture } from './admin-ads.fixtures.ts';
+
+test('request-linked banner keeps its editor and preview after uploading and saving an image', async ({ page }, info) => {
+  const locale = info.project.name.endsWith('-ar') ? 'ar' : 'en';
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await routeAdminHomeApis(page);
+  const request = { ...adminAdsRequestFixture(), intervalStart: '2030-01-01T08:00:00.000Z', intervalEnd: '2030-02-01T08:00:00.000Z' };
+  const envelope = (data: unknown) => ({ data, meta: { requestId: 'request-banner-upload' } });
+  await page.route(`**/api/v1/admin/ad-requests/${request.id}`, route => route.fulfill({ json: envelope({ request }) }));
+  await page.route('**/api/v1/admin/banners/config', route => route.fulfill({ json: envelope({ enabled: true, version: 1, placements: [{ key: 'homepage.hero', label: { ar: 'بانر الرئيسية', en: 'Homepage banner' }, active: true }] }) }));
+  await page.route('**/api/v1/admin/banners/featured-options?**', route => route.fulfill({ json: envelope({ canManage: true, advertisers: [], destinations: [] }) }));
+  await page.goto(`/admin/banners/new?requestId=${request.id}&lang=${locale}`);
+  const editor = page.getByTestId('admin-home-banner-editor');
+  await expect(editor).toBeVisible();
+  await page.locator('#admin-home-banner-target').fill('https://elsadatrealestate.com/properties/example');
+  await page.locator('#admin-home-banner-file').setInputFiles(fileURLToPath(new URL('../../public/assets/canonical/public/listing-property-rental.png', import.meta.url)));
+  await expect(page.getByTestId('banner-pending-image')).toBeVisible();
+  await page.locator('#admin-home-banner-reason').fill('Prepare requested advertisement');
+  await editor.locator('button[type="submit"]').click();
+  await expect(editor.locator('.admin-home__feedback[role="status"]')).toContainText(/saved|حفظ/iu);
+  await expect(page.getByTestId('banner-pending-image')).toHaveCount(0);
+  await expect(editor.locator('.admin-home__draft-preview-frame img')).toHaveAttribute('src', /^blob:/);
+  await expect(editor).toBeVisible();
+  expect(errors).toEqual([]);
+  await editor.screenshot({ path: info.outputPath('request-banner-after-upload.png') });
+});

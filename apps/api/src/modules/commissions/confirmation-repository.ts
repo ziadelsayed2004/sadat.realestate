@@ -44,6 +44,7 @@ const projection = {
   sourceRecordId: 1,
   policyVersion: 1,
   policyId: 1,
+  exceptionId: 1,
   accountOverrideId: 1,
   effectiveAt: 1,
   status: 1,
@@ -64,20 +65,29 @@ export function createMongooseCommissionConfirmationRepository(
   let indexes: Promise<unknown> | undefined;
 
   const ensureIndexes = (): Promise<unknown> => {
-    indexes ??= Promise.all([
-      collection.createIndex(
-        { id: 1 },
-        { unique: true, name: 'commission_confirmations_id_unique' }
-      ),
-      collection.createIndex(
-        { accountId: 1, policyVersion: 1 },
-        { unique: true, name: 'commission_confirmations_account_policy_unique' }
-      ),
-      collection.createIndex(
-        { accountId: 1, status: 1, acknowledgedAt: -1, policyVersion: -1, id: 1 },
-        { name: 'commission_confirmations_account_status_acknowledged' }
-      )
-    ]);
+    indexes ??= (async () => {
+      // Protect the complete agreement identity before retiring the legacy
+      // index: unrelated policies and exceptions can share a version number.
+      await collection.createIndex(
+        { accountId: 1, source: 1, sourceRecordId: 1, policyVersion: 1 },
+        { unique: true, name: 'commission_confirmations_account_source_version_unique' }
+      );
+      try {
+        await collection.dropIndex('commission_confirmations_account_policy_unique');
+      } catch (error) {
+        if (!error || typeof error !== 'object' || !('code' in error) || error.code !== 27) throw error;
+      }
+      return Promise.all([
+        collection.createIndex(
+          { id: 1 },
+          { unique: true, name: 'commission_confirmations_id_unique' }
+        ),
+        collection.createIndex(
+          { accountId: 1, status: 1, acknowledgedAt: -1, policyVersion: -1, id: 1 },
+          { name: 'commission_confirmations_account_status_acknowledged' }
+        )
+      ]);
+    })().catch(error => { indexes = undefined; throw error; });
     return indexes;
   };
 

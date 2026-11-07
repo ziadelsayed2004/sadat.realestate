@@ -244,6 +244,8 @@
   font-weight: 700;
 }
 
+.provider-advertising__feedback[data-tone='error'] { border-color: #edc3c3; background: #fff3f3; color: #9e2929; }
+
 .provider-advertising__form {
   display: grid;
   gap: 14px;

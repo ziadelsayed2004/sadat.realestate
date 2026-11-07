@@ -237,7 +237,7 @@ test('records owner acknowledgements with policy versions, supersession, admin r
   const second = await service.acknowledge(provider, { accountId, source: 'exception', sourceRecordId: '444444444444444444444444', exceptionId: '444444444444444444444444', policyVersion: 4, effectiveAt: '2026-08-22T00:00:00.000Z', acknowledge: true });
   assert.equal(second.status, 'acknowledged');
   assert.equal((await service.getConfirmation(admin, first.id)).status, 'superseded');
-  await assert.rejects(() => service.acknowledge(provider, { accountId, source: 'policy', sourceRecordId: '555555555555555555555555', policyId: '555555555555555555555555', policyVersion: 4, effectiveAt: second.effectiveAt, acknowledge: true }), (error) => error instanceof CommissionConfirmationServiceError && error.code === 'COMMISSION_CONFIRMATION_CONFLICT');
+  await assert.rejects(() => service.acknowledge(provider, { accountId, source: 'exception', sourceRecordId: second.sourceRecordId, exceptionId: second.exceptionId, policyVersion: 4, effectiveAt: '2026-08-22T01:00:00.000Z', acknowledge: true }), (error) => error instanceof CommissionConfirmationServiceError && error.code === 'COMMISSION_CONFIRMATION_CONFLICT');
 
   const providerList = await service.listConfirmations(provider, { page: 1, limit: 10 });
   assert.deepEqual(providerList.items.map(item => item.id), [second.id, first.id]);

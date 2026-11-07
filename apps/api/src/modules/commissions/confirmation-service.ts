@@ -47,7 +47,7 @@ export function createCommissionConfirmationService(seed: { confirmations?: Comm
     if (!confirmation) throw new CommissionConfirmationServiceError('COMMISSION_CONFIRMATION_NOT_FOUND');
     return confirmation;
   };
-  const eventKey = (accountId: string, policyVersion: number) => `${accountId}:${policyVersion}`;
+  const eventKey = (value: { accountId: string; source: string; sourceRecordId: string; policyVersion: number }) => `${value.accountId}:${value.source}:${value.sourceRecordId}:${value.policyVersion}`;
   const sameSource = (left: CommissionConfirmation, right: { source: CommissionConfirmation['source']; sourceRecordId: string; policyVersion: number; effectiveAt: string }) =>
     left.source === right.source && left.sourceRecordId === right.sourceRecordId && left.policyVersion === right.policyVersion && left.effectiveAt === right.effectiveAt;
 
@@ -57,8 +57,8 @@ export function createCommissionConfirmationService(seed: { confirmations?: Comm
       providerOwner(claims, parsed.accountId);
       const { acknowledge: _acknowledge, ...confirmationInput } = parsed;
       void _acknowledge;
-      const key = eventKey(parsed.accountId, parsed.policyVersion);
-      const existing = (await allConfirmations()).find(item => eventKey(item.accountId, item.policyVersion) === key);
+      const key = eventKey(parsed);
+      const existing = (await allConfirmations()).find(item => eventKey(item) === key);
       if (existing) {
         if (existing.status === 'acknowledged' && sameSource(existing, confirmationInput)) return existing;
         throw new CommissionConfirmationServiceError(existing.status === 'revoked' ? 'COMMISSION_CONFIRMATION_INVALID_STATE' : 'COMMISSION_CONFIRMATION_CONFLICT');

@@ -25,7 +25,7 @@ import {
   type ProviderCommissionProjection,
   type ProviderCommissionConfirmation
 } from '@sadat-real-estate/contracts';
-import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import { ApiClient, ApiClientError, type ApiClientOptions } from '../contracts/index.ts';
 import type { ProviderAuthorizationSource } from './data.ts';
 
 export const PROVIDER_ADVERTISING_ROUTE = '/provider/ads' as const;
@@ -144,12 +144,15 @@ export const defaultProviderAdvertisingDetailLoader = createProviderAdvertisingD
 
 export async function loadProviderCommission(options: ProviderAdvertisingDetailLoadOptions = {}): Promise<ProviderCommissionProjection> {
   const client = clientFor(options);
-  const headers = authorizationHeaders(options.authorization);
-  const response = await client.request(PROVIDER_COMMISSION_ROUTE, {
-    responseSchema: providerCommissionSuccessEnvelopeSchema,
-    ...(headers === undefined ? {} : { headers }),
-    ...(options.signal === undefined ? {} : { signal: options.signal })
-  });
+  const request = () => {
+    const headers = authorizationHeaders(options.authorization);
+    return client.request(PROVIDER_COMMISSION_ROUTE, {
+      responseSchema: providerCommissionSuccessEnvelopeSchema,
+      ...(headers === undefined ? {} : { headers }),
+      ...(options.signal === undefined ? {} : { signal: options.signal })
+    });
+  };
+  const response = await withCommissionSession(request, options.authorization, options.signal);
   return response.data.data;
 }
 
@@ -166,16 +169,28 @@ export function createProviderCommissionConfirmer(
 ): ProviderCommissionConfirmer {
   return async (policyVersion, signal) => {
     const client = clientFor(options);
-    const headers = authorizationHeaders(options.authorization);
-    const response = await client.request(`${PROVIDER_COMMISSION_ROUTE}/confirm`, {
-      method: 'POST',
-      responseSchema: providerCommissionConfirmationSuccessEnvelopeSchema,
-      ...(headers === undefined ? {} : { headers }),
-      json: providerCommissionConfirmationRequestSchema.parse({ policyVersion, acknowledge: true }),
-      ...(signal === undefined ? {} : { signal })
-    });
+    const request = () => {
+      const headers = authorizationHeaders(options.authorization);
+      return client.request(`${PROVIDER_COMMISSION_ROUTE}/confirm`, {
+        method: 'POST',
+        responseSchema: providerCommissionConfirmationSuccessEnvelopeSchema,
+        ...(headers === undefined ? {} : { headers }),
+        json: providerCommissionConfirmationRequestSchema.parse({ policyVersion, acknowledge: true }),
+        ...(signal === undefined ? {} : { signal })
+      });
+    };
+    const response = await withCommissionSession(request, options.authorization, signal);
     return response.data.data;
   };
+}
+
+async function withCommissionSession<T>(request: () => Promise<T>, authorization: ProviderAuthorizationSource | undefined, signal?: AbortSignal): Promise<T> {
+  try { return await request(); }
+  catch (error) {
+    if (!(error instanceof ApiClientError) || error.status !== 401 || !authorization?.refresh || signal?.aborted) throw error;
+    await authorization.refresh();
+    return request();
+  }
 }
 
 export function createProviderAdvertisingMutationApi(options: ProviderAdvertisingMutationOptions = {}): ProviderAdvertisingMutationApi {

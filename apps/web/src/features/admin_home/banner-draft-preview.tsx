@@ -7,9 +7,9 @@ import type { BannerImageSelection } from './banner-gallery.tsx';
 
 export function BannerDraftPreview({ locale, title, body, files, images, keepOriginal, targetUrl, drafts = {} }: { locale: SupportedLocale; title: LocalizedText; body: LocalizedText; files: File[]; images: BannerImageSelection[]; keepOriginal: boolean; drafts?: BannerSlideDrafts; targetUrl?: string }) {
   const ar = locale === 'ar';
-  const [urls, setUrls] = useState<string[]>([]), [mobile, setMobile] = useState(false), [original, setOriginal] = useState(false), [image, setImage] = useState(0);
-  useEffect(() => { const next = files.map(file => URL.createObjectURL(file)); setUrls(next); return () => next.forEach(url => URL.revokeObjectURL(url)); }, [files]);
-  const pictures = [...images.map(item => ({ url: item.url, draft: drafts[item.id] })), ...urls.map((url, index) => ({ url, draft: drafts[bannerFileKey(files[index]!)] }))];
+  const [previews, setPreviews] = useState<{ file: File; url: string }[]>([]), [mobile, setMobile] = useState(false), [original, setOriginal] = useState(false), [image, setImage] = useState(0);
+  useEffect(() => { const next = files.map(file => ({ file, url: URL.createObjectURL(file) })); setPreviews(next); return () => next.forEach(({ url }) => URL.revokeObjectURL(url)); }, [files]);
+  const pictures = [...images.map(item => ({ url: item.url, draft: drafts[item.id] })), ...previews.filter(item => files.includes(item.file)).map(({ file, url }) => ({ url, draft: drafts[bannerFileKey(file)] }))];
   const current = pictures[image % Math.max(pictures.length, 1)];
   const showingOriginal = keepOriginal && original;
   const url = showingOriginal ? '/assets/canonical/public/home-hero-sadat-city.png' : current?.url;
