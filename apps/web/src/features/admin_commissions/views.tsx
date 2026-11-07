@@ -211,7 +211,20 @@ function statusTone(status: string): 'neutral' | 'success' | 'warning' | 'danger
 
 function PolicyTable({ data, locale, onPage, update, canManage, onSaved }: { readonly data: CommissionPolicyListData; readonly locale: SupportedLocale; readonly onPage: (page: number) => void; update: AdminCommissionPolicyUpdate; canManage: boolean; onSaved: () => void }) {
   const copy = getAdminCommissionsCopy(locale);
-  return <section className="admin-commissions__panel"><div className="admin-commissions__panel-heading"><div><h2>{copy.titles.policies}</h2><p>{copy.count(data.total)}</p></div><span>{copy.labels.value}</span></div><div className="admin-commissions__table-wrap"><table className="admin-commissions__table"><thead><tr><th scope="col">{copy.labels.key}</th><th scope="col">{copy.labels.label}</th><th scope="col">{copy.labels.scope}</th><th scope="col">{copy.labels.kind}</th><th scope="col">{copy.labels.value}</th><th scope="col">{copy.labels.status}</th><th scope="col">{copy.labels.effectiveFrom}</th><th scope="col">{copy.labels.version}</th>{canManage ? <th scope="col">{locale === 'ar' ? 'الإجراء' : 'Action'}</th> : null}</tr></thead><tbody>{data.items.map(item => <tr key={item.id} data-testid={`admin-commission-policy-${item.id}`}><td><code>{item.key}</code></td><td>{item.label}</td><td>{scopeLabel(item.scope, locale)}</td><td>{copy.kinds[item.kind]}</td><td>{copy.value(item.kind, item.percentageBps, item.fixedAmountMinor, item.currency)}<small>{rentLabel(item.rentMonths, locale)}</small></td><td><Badge tone={statusTone(item.status)}>{copy.statuses[item.status]}</Badge></td><td>{dateLabel(item.effectiveFrom, locale)}</td><td>{item.version}</td>{canManage ? <td><PolicyActions item={item} locale={locale} update={update} onSaved={onSaved} /></td> : null}</tr>)}</tbody></table></div><Pagination page={data.page} limit={data.limit} total={data.total} locale={locale} onPrevious={() => onPage(data.page - 1)} onNext={() => onPage(data.page + 1)} /></section>;
+  return <section className="admin-commissions__panel">
+    <div className="admin-commissions__panel-heading"><div><h2>{copy.titles.policies}</h2><p>{copy.count(data.total)}</p></div></div>
+    <div className="admin-commission-policies">{data.items.map(item => <article className="admin-commission-policy" key={item.id} data-testid={`admin-commission-policy-${item.id}`}>
+      <header className="admin-commission-policy__heading"><div><h3>{item.label}</h3><code dir="ltr">{item.key}</code></div><Badge tone={statusTone(item.status)}>{copy.statuses[item.status]}</Badge></header>
+      <dl className="admin-commission-policy__details">
+        <div><dt>{copy.labels.scope}</dt><dd>{scopeLabel(item.scope, locale)}</dd></div>
+        <div><dt>{copy.labels.kind} · {copy.labels.value}</dt><dd><strong>{copy.value(item.kind, item.percentageBps, item.fixedAmountMinor, item.currency)}</strong><small>{rentLabel(item.rentMonths, locale)}</small></dd></div>
+        <div><dt>{copy.labels.effectiveFrom}</dt><dd>{dateLabel(item.effectiveFrom, locale)}</dd></div>
+        <div><dt>{copy.labels.version}</dt><dd>{item.version}</dd></div>
+      </dl>
+      {canManage && item.status !== 'archived' ? <div className="admin-commission-policy__footer"><PolicyActions item={item} locale={locale} update={update} onSaved={onSaved} /></div> : null}
+    </article>)}</div>
+    <Pagination page={data.page} limit={data.limit} total={data.total} locale={locale} onPrevious={() => onPage(data.page - 1)} onNext={() => onPage(data.page + 1)} />
+  </section>;
 }
 
 function ExceptionTable({ data, locale, onPage, update, canManage, onSaved }: { readonly data: CommissionExceptionListData; readonly locale: SupportedLocale; readonly onPage: (page: number) => void; update: AdminCommissionExceptionUpdate; canManage: boolean; onSaved: () => void }) {

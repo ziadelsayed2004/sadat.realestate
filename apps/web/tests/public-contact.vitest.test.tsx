@@ -11,8 +11,9 @@ describe('configured public contacts', () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ data: { defaultLocale: 'ar', supportedLocales: ['ar', 'en'], directions: { ar: 'rtl', en: 'ltr' }, display: {}, contact }, meta: { requestId: 'hours' } }), { headers: { 'Content-Type': 'application/json' } })));
     await refreshPublicContact();
     const { container } = render(<PublicSiteFooter locale={locale} />);
-    expect(container.querySelector('.public-site-footer__hours strong')).toHaveTextContent(locale === 'ar' ? 'ساعات العمل' : 'Working hours');
-    expect(container.querySelector('.public-site-footer__hours > span')).toHaveTextContent(locale === 'ar' ? 'نعمل على مدار 24 ساعة' : 'Open 24 hours');
+    const hours = screen.getByRole('region', { name: locale === 'ar' ? 'ساعات العمل' : 'Working hours' });
+    expect(within(hours).getByRole('heading', { level: 2 })).toHaveTextContent(locale === 'ar' ? 'ساعات العمل' : 'Working hours');
+    expect(hours.querySelector('p')).toHaveTextContent(locale === 'ar' ? 'نعمل على مدار 24 ساعة' : 'Open 24 hours');
     contact = {};
     await act(async () => { await refreshPublicContact(); });
     expect(container.querySelector('.public-site-footer__hours')).toBeNull();

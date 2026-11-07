@@ -13,7 +13,7 @@ export function PolicyActions({ item, locale, update, onSaved }: { item: Commiss
   const [rent, setRent] = useState(String(item.rentMonths ?? 0.5));
   const ar = locale === 'ar';
   if (item.status === 'archived') return null;
-  return <div className="admin-commission-exception-actions">
+  return <div className="admin-commission-exception-actions admin-commission-policy-actions">
     <Button type="button" size="sm" variant="secondary" disabled={busy} onClick={() => setEditing(value => !value)}>{ar ? 'تعديل عمولة البيع والإيجار' : 'Edit sale and rental commission'}</Button>
     {editing ? <>
       {item.kind !== 'exempt' ? <><label>{ar ? item.kind === 'percentage' ? 'عمولة البيع (%)' : 'مبلغ عمولة البيع' : 'Sale commission'}<input type="number" min="0" max={item.kind === 'percentage' ? 100 : undefined} step="0.01" value={sale} onChange={event => setSale(event.target.value)} /></label><RentField locale={locale} value={rent} onChange={setRent} /></> : <p>{ar ? 'هذه سياسة إعفاء. أنشئ سياسة بنسبة أو مبلغ لإلغاء الإعفاء.' : 'This policy is exempt. Create a percentage or fixed policy to replace it.'}</p>}

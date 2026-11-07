@@ -26,6 +26,9 @@ export function usePublicContact(): Contact {
   const [contact, setContact] = useState(cached);
   useEffect(() => {
     listeners.add(setContact);
+    // Another mounted contact consumer can finish the shared request between
+    // this render and subscription. Read that result even while it is fresh.
+    setContact(cached);
     const refresh = () => { if (Date.now() - checkedAt > 30_000) void refreshPublicContact(); };
     refresh();
     window.addEventListener('focus', refresh);

@@ -361,3 +361,26 @@
 .admin-commissions__help summary { cursor: pointer; font-weight: 700; color: #145a49; }
 .admin-commissions__help ol { padding-inline-start: 1.5rem; }
 .admin-commissions__field small, .admin-commissions__table td > small { display: block; font-size: .8rem; line-height: 1.7; color: #687386; }
+
+.admin-commission-policies { display: grid; gap: 1rem; min-width: 0; }
+.admin-commission-policy { min-width: 0; border: 1px solid #e2e7e3; border-radius: .9rem; background: #fff; overflow: hidden; }
+.admin-commission-policy__heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; padding: 1.25rem; }
+.admin-commission-policy__heading > div { min-width: 0; }
+.admin-commission-policy__heading h3 { margin: 0 0 .5rem; font-size: 1rem; overflow-wrap: anywhere; }
+.admin-commission-policy__heading code { display: block; width: fit-content; max-width: 100%; font-size: .75rem; overflow-wrap: anywhere; }
+.admin-commission-policy__details { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin: 0 1.25rem 1.25rem; padding: 1rem; border-radius: .65rem; background: #f8faf8; }
+.admin-commission-policy__details > div { min-width: 0; }
+.admin-commission-policy__details dt { color: #65736c; font-size: .8rem; }
+.admin-commission-policy__details dd { margin: .4rem 0 0; line-height: 1.7; overflow-wrap: anywhere; }
+.admin-commission-policy__details small { display: block; font-size: .8rem; color: #687386; }
+.admin-commission-policy__footer { padding: 1rem 1.25rem; border-top: 1px solid #e2e7e3; background: #fcfbf7; }
+.admin-commission-policy-actions { grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); align-items: start; }
+.admin-commission-policy-actions > * { min-width: 0; }
+.admin-commission-policy-actions .ui-button { width: 100%; height: auto; white-space: normal; }
+.admin-commission-policy-actions .ui-button__label { white-space: normal; overflow-wrap: anywhere; line-height: 1.6; }
+@media (max-width: 48rem) {
+  .admin-commission-policy__details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-commission-policy-actions { grid-template-columns: 1fr; }
+  .admin-commission-policy__heading, .admin-commission-policy__footer { padding: 1rem; }
+  .admin-commission-policy__details { margin-inline: 1rem; }
+}

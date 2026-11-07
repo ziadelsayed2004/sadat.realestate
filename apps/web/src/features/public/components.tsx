@@ -278,6 +278,11 @@ export function PublicMediaImage({
 
 const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `
 .public-site-footer .public-site-footer__contact-links a{display:flex;align-items:center;gap:.5rem;min-block-size:2.75rem}
+.public-site-footer__hours{display:flex;align-items:flex-start;gap:1rem;inline-size:calc(100% - 2rem);max-inline-size:48rem;box-sizing:border-box;margin:0 auto 1.5rem;padding:1.25rem;border:1px solid #d3a13d80;border-radius:1rem;background:linear-gradient(120deg,#254d4b,#1d353f);box-shadow:0 .5rem 1.5rem #00000014;color:#f8f3e6}
+.public-site-footer__hours>svg{flex:none;inline-size:2.75rem;block-size:2.75rem;padding:.5rem;box-sizing:border-box;border-radius:.75rem;background:#d3a13d26;color:#f3cf85}
+.public-site-footer__hours>div{min-inline-size:0}
+.public-site-footer__hours h2{margin:0 0 .375rem;color:#f3cf85;font-size:1rem;line-height:1.5}
+.public-site-footer__hours p{margin:0;color:#f8f3e6;font-size:.875rem;line-height:1.9;white-space:pre-line;overflow-wrap:anywhere}
 .public-site-footer__contact-links svg{inline-size:1.25rem;block-size:1.25rem;flex-shrink:0}
 .public-site-footer a{transition:color .2s ease-in-out,background-color .2s ease-in-out}
 @media(prefers-reduced-motion:no-preference){
@@ -390,7 +395,6 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
             {contact.phone ? <a href={`tel:${contact.phone}`}><bdi>{contact.phone}</bdi><img src="/assets/figma/public-footer-phone.svg" alt="" /></a> : null}
             {whatsapp ? <a href={whatsapp} target="_blank" rel="noopener noreferrer">{labels.whatsapp}<WhatsAppIcon /></a> : null}
             {officeMap ? <a href={officeMap} target="_blank" rel="noopener noreferrer">{officeAddress ?? labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></a> : <span>{labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></span>}
-            {localizedText(contact.workingHours, locale) ? <div className="public-site-footer__hours"><strong>{locale === 'ar' ? 'ساعات العمل' : 'Working hours'}</strong><span>{localizedText(contact.workingHours, locale)}</span></div> : null}
           </div>
         </div>
         <div className="public-site-footer__support" role="group" aria-labelledby="public-footer-support-title">
@@ -402,6 +406,10 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
           </div>
         </div>
       </div>
+      {localizedText(contact.workingHours, locale) ? <section className="public-site-footer__hours" aria-labelledby="public-footer-hours-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        <div><h2 id="public-footer-hours-title">{locale === 'ar' ? 'ساعات العمل' : 'Working hours'}</h2><p>{localizedText(contact.workingHours, locale)}</p></div>
+      </section> : null}
       <div className="public-site-footer__follow">
         <div className="public-site-footer__follow-inner">
           <div className="public-site-footer__follow-copy"><strong>{labels.follow}</strong><span>{labels.followBody}</span></div>
